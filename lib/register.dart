@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:tiendaprincipal/tienda.dart';
+import 'login_page.dart';
 
 class RegistroPage extends StatefulWidget {
   @override
@@ -51,6 +53,12 @@ class _RegistroPageState extends State<RegistroPage>
         SnackBar(content: Text('Usuario registrado con éxito')),
       );
       Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TiendaPage(nombre: _nombreController.text),
+        ),
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('La contraseña proporcionada es demasiado débil.');

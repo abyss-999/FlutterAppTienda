@@ -24,6 +24,9 @@ class LoginApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
+  final String? nombre;
+
+  LoginPage({Key? key, this.nombre}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }

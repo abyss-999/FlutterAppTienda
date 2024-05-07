@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'carrito.dart';
 
 class TiendaPage extends StatefulWidget {
-  final String? email;
+  final String? nombre;
 
-  TiendaPage({Key? key, this.email}) : super(key: key);
+  TiendaPage({Key? key, this.nombre}) : super(key: key);
 
   @override
   _NewScreenState createState() => _NewScreenState();
@@ -37,7 +37,8 @@ class _NewScreenState extends State<TiendaPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            Text('Bienvenido, ${widget.email}', style: TextStyle(fontSize: 20)),
+            Text('Bienvenido, ${widget.nombre}',
+                style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
             TextField(
               onChanged: (value) {
@@ -79,9 +80,21 @@ class _NewScreenState extends State<TiendaPage> {
           Navigator.pushNamed(context, route);
         },
         child: Center(
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'lib/assets/$title.png',
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 10),
+              Text(
+                title,
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
           ),
         ),
       ),
