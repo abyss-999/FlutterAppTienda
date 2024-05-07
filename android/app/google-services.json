@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "401078638906",
+    "firebase_url": "https://apptienda-7fdec-default-rtdb.firebaseio.com",
+    "project_id": "apptienda-7fdec",
+    "storage_bucket": "apptienda-7fdec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401078638906:android:17204a58c897a0f0bb9803",
+        "android_client_info": {
+          "package_name": "com.example.aadirproductos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1JOADnrkWl88-5mDtDi0Sb00jvSC4nU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401078638906:android:5ee872c78f4b26dbbb9803",
+        "android_client_info": {
+          "package_name": "com.example.proyectokotiln"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1JOADnrkWl88-5mDtDi0Sb00jvSC4nU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401078638906:android:f8c7e2b98447cf91bb9803",
+        "android_client_info": {
+          "package_name": "com.example.tiendaprincipal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1JOADnrkWl88-5mDtDi0Sb00jvSC4nU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
