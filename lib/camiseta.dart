@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
-class Camisas extends StatefulWidget {
+class CamisasPage extends StatefulWidget {
   @override
   _CamisasState createState() => _CamisasState();
 }
 
-class _CamisasState extends State<Camisas> {
+class Producto {
+  late String nombre;
+  late List<String> imagen;
+  late String categoria;
+  late double precio;
+
+  Producto.fromFirestore(DocumentSnapshot doc) {
+    nombre = doc['nombre'];
+    imagen = List<String>.from(doc['imagen']);
+    categoria = doc['categoria'];
+    precio = doc['precio'].toDouble();
+  }
+}
+
+class _CamisasState extends State<CamisasPage> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<Producto> productos = [];
 
@@ -22,39 +37,45 @@ class _CamisasState extends State<Camisas> {
           .collection('Productos')
           .where('categoria', isEqualTo: 'camisas')
           .get();
-      List<Producto> productos = snapshot.docs.map((doc) => Producto.fromFirestore(doc)).toList();
+      List<Producto> productos =
+          snapshot.docs.map((doc) => Producto.fromFirestore(doc)).toList();
       setState(() {
         this.productos = productos;
       });
+
+      for (var producto in productos) {
+        for (var url in producto.imagen) {
+          print('URL de la imagen: $url');
+        }
+      }
     } catch (e) {
       print(e);
     }
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Camisas'),
       ),
-      body: ListView.builder(
-        itemCount: productos.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(productos[index].nombre),
-            // Aquí puedes agregar más detalles sobre cada producto
-          );
-        },
-      ),
+      body: productos.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: productos.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CachedNetworkImage(
+                    imageUrl: productos[index].imagen[0],
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                  title: Text(productos[index].nombre),
+                  subtitle: Text(productos[index].categoria),
+                  trailing:
+                      Text('\$${productos[index].precio.toStringAsFixed(2)}'),
+                );
+              },
+            ),
     );
-  }
-}
-
-class Producto {
-  late String nombre;
-
-  Producto.fromFirestore(DocumentSnapshot doc) {
-    nombre = doc['nombre'];
-    // Aquí puedes inicializar más campos si los tienes en tu documento
   }
 }

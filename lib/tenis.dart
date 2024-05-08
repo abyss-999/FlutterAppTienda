@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Tenis extends StatefulWidget {
+class TenisPage extends StatefulWidget {
   @override
   _TenisState createState() => _TenisState();
 }
 
-class _TenisState extends State<Tenis> {
+class _TenisState extends State<TenisPage> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<Producto> productos = [];
 
@@ -22,7 +22,8 @@ class _TenisState extends State<Tenis> {
           .collection('Productos')
           .where('categoria', isEqualTo: 'tenis')
           .get();
-      List<Producto> productos = snapshot.docs.map((doc) => Producto.fromFirestore(doc)).toList();
+      List<Producto> productos =
+          snapshot.docs.map((doc) => Producto.fromFirestore(doc)).toList();
       setState(() {
         this.productos = productos;
       });
