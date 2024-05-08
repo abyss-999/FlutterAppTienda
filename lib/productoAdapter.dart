@@ -11,7 +11,6 @@ class Producto {
     nombre = doc['nombre'];
     precio = doc['precio'];
     imagen = List<String>.from(doc['imagen']);
-    // Aquí puedes inicializar más campos si los tienes en tu documento
   }
 }
 

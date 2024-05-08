@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
+import 'carritoModel.dart';
+import 'producto.dart';
+import 'producto_carrito.dart';
 
 class CamisasPage extends StatefulWidget {
   @override
   _CamisasState createState() => _CamisasState();
-}
-
-class Producto {
-  late String nombre;
-  late List<String> imagen;
-  late String categoria;
-  late double precio;
-
-  Producto.fromFirestore(DocumentSnapshot doc) {
-    nombre = doc['nombre'];
-    imagen = List<String>.from(doc['imagen']);
-    categoria = doc['categoria'];
-    precio = doc['precio'].toDouble();
-  }
 }
 
 class _CamisasState extends State<CamisasPage> {
@@ -71,8 +61,29 @@ class _CamisasState extends State<CamisasPage> {
                   ),
                   title: Text(productos[index].nombre),
                   subtitle: Text(productos[index].categoria),
-                  trailing:
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Text('\$${productos[index].precio.toStringAsFixed(2)}'),
+                      IconButton(
+                        icon: Icon(Icons.add_shopping_cart),
+                        onPressed: () {
+                          Provider.of<CarritoModel>(context, listen: false)
+                              .agregarProducto(
+                            ProductoCarrito(
+                              ProductoC.fromProducto(productos[index]),
+                              1,
+                            ),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Producto añadido al carrito'),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
