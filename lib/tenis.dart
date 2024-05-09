@@ -11,14 +11,20 @@ class TenisPage extends StatefulWidget {
   _TenisState createState() => _TenisState();
 }
 
-class _TenisState extends State<TenisPage> {
+class _TenisState extends State<TenisPage> with SingleTickerProviderStateMixin {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<Producto> productos = [];
+  late AnimationController _controller;
+  Set<int> addedProducts = {};
 
   @override
   void initState() {
     super.initState();
     fetchTenis();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
   }
 
   fetchTenis() async {
@@ -41,6 +47,12 @@ class _TenisState extends State<TenisPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -66,7 +78,12 @@ class _TenisState extends State<TenisPage> {
                     children: [
                       Text('\$${productos[index].precio.toStringAsFixed(2)}'),
                       IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
+                        icon: AnimatedCrossFade(
+                          duration: const Duration(seconds: 1),
+                          firstChild: Icon(Icons.add_shopping_cart),
+                          secondChild: Icon(Icons.shopping_cart),
+                          crossFadeState: addedProducts.contains(index) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                        ),
                         onPressed: () {
                           Provider.of<CarritoModel>(context, listen: false)
                               .agregarProducto(
@@ -80,6 +97,9 @@ class _TenisState extends State<TenisPage> {
                               content: Text('Producto añadido al carrito'),
                             ),
                           );
+                          setState(() {
+                            addedProducts.add(index);
+                          });
                         },
                       ),
                     ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'carrito.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'login_page.dart';
 
 class TiendaPage extends StatefulWidget {
   final String? nombre;
@@ -12,6 +14,41 @@ class TiendaPage extends StatefulWidget {
 
 class _NewScreenState extends State<TiendaPage> {
   String searchText = '';
+
+  Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  Future<void> confirmAndLogout() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmar'),
+          content: Text('¿Estás seguro de que quieres cerrar la sesión?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+  child: Text('Sí'),
+  onPressed: () {
+    logout().then((_) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginPage()),
+        (Route<dynamic> route) => false,
+      );
+    });
+  },
+),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +66,10 @@ class _NewScreenState extends State<TiendaPage> {
                 ),
               );
             },
+          ),
+          IconButton(
+            icon: Icon(Icons.logout, color: Colors.white),
+            onPressed: confirmAndLogout,
           ),
         ],
       ),

@@ -11,14 +11,20 @@ class CamisasPage extends StatefulWidget {
   _CamisasState createState() => _CamisasState();
 }
 
-class _CamisasState extends State<CamisasPage> {
+class _CamisasState extends State<CamisasPage> with SingleTickerProviderStateMixin {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<Producto> productos = [];
+  late AnimationController _controller;
+  Set<int> addedProducts = {};
 
   @override
   void initState() {
     super.initState();
     fetchCamisas();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
   }
 
   fetchCamisas() async {
@@ -41,6 +47,12 @@ class _CamisasState extends State<CamisasPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -66,7 +78,12 @@ class _CamisasState extends State<CamisasPage> {
                     children: [
                       Text('\$${productos[index].precio.toStringAsFixed(2)}'),
                       IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
+                        icon: AnimatedCrossFade(
+                          duration: const Duration(seconds: 1),
+                          firstChild: Icon(Icons.add_shopping_cart),
+                          secondChild: Icon(Icons.shopping_cart),
+                          crossFadeState: addedProducts.contains(index) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                        ),
                         onPressed: () {
                           Provider.of<CarritoModel>(context, listen: false)
                               .agregarProducto(
@@ -80,6 +97,9 @@ class _CamisasState extends State<CamisasPage> {
                               content: Text('Producto añadido al carrito'),
                             ),
                           );
+                          setState(() {
+                            addedProducts.add(index);
+                          });
                         },
                       ),
                     ],

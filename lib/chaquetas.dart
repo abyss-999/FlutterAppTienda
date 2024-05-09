@@ -11,14 +11,20 @@ class ChaquetasPage extends StatefulWidget {
   _ChaquetasState createState() => _ChaquetasState();
 }
 
-class _ChaquetasState extends State<ChaquetasPage> {
+class _ChaquetasState extends State<ChaquetasPage> with SingleTickerProviderStateMixin {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   List<Producto> productos = [];
+  late AnimationController _controller;
+  Set<int> addedProducts = {};
 
   @override
   void initState() {
     super.initState();
     fetchChaquetas();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
   }
 
   fetchChaquetas() async {
@@ -41,6 +47,12 @@ class _ChaquetasState extends State<ChaquetasPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -66,7 +78,12 @@ class _ChaquetasState extends State<ChaquetasPage> {
                     children: [
                       Text('\$${productos[index].precio.toStringAsFixed(2)}'),
                       IconButton(
-                        icon: Icon(Icons.add_shopping_cart),
+                        icon: AnimatedCrossFade(
+                          duration: const Duration(seconds: 1),
+                          firstChild: Icon(Icons.add_shopping_cart),
+                          secondChild: Icon(Icons.shopping_cart),
+                          crossFadeState: addedProducts.contains(index) ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                        ),
                         onPressed: () {
                           Provider.of<CarritoModel>(context, listen: false)
                               .agregarProducto(
@@ -80,6 +97,9 @@ class _ChaquetasState extends State<ChaquetasPage> {
                               content: Text('Producto añadido al carrito'),
                             ),
                           );
+                          setState(() {
+                            addedProducts.add(index);
+                          });
                         },
                       ),
                     ],
